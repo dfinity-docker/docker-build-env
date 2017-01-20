@@ -44,5 +44,9 @@ RUN mkdir -p github.com/ethereum
 WORKDIR github.com/ethereum
 RUN git clone git://github.com/ethereum/go-ethereum.git 
 
+# create a go build directory
+RUN mkdir /go
+ENV GOPATH=/go:${GOPATH}
+
 # switch to work directory
-WORKDIR /build
+WORKDIR /go
