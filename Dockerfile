@@ -33,6 +33,8 @@ WORKDIR bls
 RUN sed -i -e "s/^\(sample_test.*\)/\1 \$(EXE_DIR)\/bls_tool.exe/" Makefile
 RUN make test && make sample_test
 ENV PATH=/build/herumi/bls/bin:$PATH
+ENV LIBRARY_PATH=/build/herumi/bls/lib:/build/herumi/mcl/lib:$LIBRARY_PATH
+ENV CPATH=/build/herumi/bls/include:$CPATH
 
 # install frequent dependencies
 ## create and switch to src directory
