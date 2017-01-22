@@ -41,6 +41,11 @@ ENV CPATH=/build/herumi/bls/include:$CPATH
 RUN mkdir /src
 WORKDIR /src
 ENV GOPATH=/
+
+# install gometalinter
+RUN go get -u github.com/alecthomas/gometalinter
+RUN gometalinter --install
+
 ## clone go-ethereum 
 RUN mkdir -p github.com/ethereum
 WORKDIR github.com/ethereum
