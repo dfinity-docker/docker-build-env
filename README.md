@@ -10,6 +10,8 @@ Example:
 
 #### Linters
 
+Run `go install` first.
+
 Run selected linters:
 ```gometalinter --disable-all --enable=vet```
 
