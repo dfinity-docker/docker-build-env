@@ -3,8 +3,15 @@ Dfinity specific build environment C, Go, Python
 
 ## Run
 
-Example (Go):
+### Go
+
+Example:
 ```docker run --rm -it -v `pwd`/go:/go dfinity/build-env go run <go-file>```
+
+#### Linters
 
 Run selected linters:
 ```gometalinter --disable-all --enable=vet```
+
+Increase deadline
+```gometalinter --deadline=10s```
