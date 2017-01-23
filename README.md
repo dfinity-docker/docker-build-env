@@ -15,5 +15,8 @@ Run `go install` first.
 Run selected linters:
 ```gometalinter --disable-all --enable=vet```
 
+Disable selected linters:
+```gometalinter --disable=gas --disable=gocyclo```
+
 Increase deadline
 ```gometalinter --deadline=10s```
