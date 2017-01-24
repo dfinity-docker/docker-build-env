@@ -40,6 +40,7 @@ RUN sed -i -e "s/^\(sample_test.*\)/\1 \$(EXE_DIR)\/bls_tool.exe/" Makefile
 
 # Install C/C++ libraries.
 RUN make test
+RUN make sample_test
 WORKDIR /tmp
 RUN cp mcl/lib/*.a /usr/local/lib
 RUN cp bls/lib/*.a /usr/local/lib
@@ -51,7 +52,7 @@ RUN mkdir /go
 ENV LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
 ENV CPATH=/usr/local/include:$CPATH
 ENV GOPATH=/go
-ENV PATH=/go/bin:$PATH
+ENV PATH=/go/bin:/usr/local/bin:$PATH
 
 # Get Go libraries.
 RUN go get -u github.com/alecthomas/gometalinter
