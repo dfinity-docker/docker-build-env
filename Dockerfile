@@ -1,11 +1,12 @@
 FROM debian:stretch-slim
 MAINTAINER Timo Hanke <timo.t.hanke@gmail.com>
 
+# Use defaults.
 ENV DEBIAN_FRONTEND noninteractive
 
-# debian packages
-## install
-RUN apt-get update && apt-get install -y \
+# Install Debian packages.
+RUN apt-get update
+RUN apt-get install -y \
     apt-utils \
     build-essential \
     git \
@@ -13,47 +14,51 @@ RUN apt-get update && apt-get install -y \
     libgmp-dev \
     libssl-dev \
     python \
-    vim 
-## clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    vim
+RUN apt-get clean
 
-# build binaries
-## create and switch to build directory
-RUN mkdir /build
-WORKDIR /build
-## build herumi's tools
-RUN mkdir herumi 
-WORKDIR herumi
-RUN git clone git://github.com/herumi/xbyak.git 
+# Get C/C++ libraries.
+WORKDIR /tmp
+RUN git clone git://github.com/herumi/xbyak.git
+WORKDIR /tmp/xbyak
+RUN git checkout a8d4c1fff30542cb45afc03e85cd1f2d451c527e
+WORKDIR /tmp
 RUN git clone git://github.com/herumi/cybozulib.git
+WORKDIR /tmp/cybozulib
+RUN git checkout d8ad6d345c6aac010f9df08f72af5c9e74e27bb6
+WORKDIR /tmp
 RUN git clone git://github.com/herumi/mcl.git
+WORKDIR /tmp/mcl
+RUN git checkout 5315d82b431945b563a24d8e22ed6e18a8a3a544
+WORKDIR /tmp
 RUN git clone git://github.com/herumi/bls.git
-WORKDIR bls
-# patch the Makefile to add building of bls_tool.exe 
+WORKDIR /tmp/bls
+RUN git checkout b68b35d9cb4c307e2ee85651fef59397c7369b70
+
+# Patch Makefile.
 RUN sed -i -e "s/^\(sample_test.*\)/\1 \$(EXE_DIR)\/bls_tool.exe/" Makefile
-RUN make test && make sample_test
-ENV PATH=/build/herumi/bls/bin:$PATH
-ENV LIBRARY_PATH=/build/herumi/bls/lib:/build/herumi/mcl/lib:$LIBRARY_PATH
-ENV CPATH=/build/herumi/bls/include:$CPATH
 
-# install frequent dependencies
-## create and switch to src directory
-RUN mkdir /src
-WORKDIR /src
-ENV GOPATH=/
+# Install C/C++ libraries.
+RUN make test
+WORKDIR /tmp
+RUN cp mcl/lib/*.a /usr/local/lib
+RUN cp bls/lib/*.a /usr/local/lib
+RUN cp bls/bin/*.exe /usr/local/bin
+RUN cp bls/include/*.h /usr/local/include
 
-# install gometalinter
+# Set environment variable.
+RUN mkdir /go
+ENV LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+ENV CPATH=/usr/local/include:$CPATH
+ENV GOPATH=/go
+ENV PATH=/go/bin:$PATH
+
+# Get Go libraries.
 RUN go get -u github.com/alecthomas/gometalinter
+RUN go get -u github.com/ethereum/go-ethereum
+
+# Install Go linting tools.
 RUN gometalinter --install
 
-## clone go-ethereum 
-RUN mkdir -p github.com/ethereum
-WORKDIR github.com/ethereum
-RUN git clone git://github.com/ethereum/go-ethereum.git 
-
-# create a go build directory
-RUN mkdir /go
-ENV GOPATH=/go:${GOPATH}
-
-# switch to work directory
-WORKDIR /go
+# Set working directory.
+WORKDIR /go/src
