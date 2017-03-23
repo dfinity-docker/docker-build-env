@@ -5,8 +5,7 @@ MAINTAINER Timo Hanke <timo.t.hanke@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install Debian packages.
-RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     apt-utils \
     build-essential \
     git \
@@ -46,12 +45,12 @@ ENV CPATH=/usr/local/include:$CPATH
 ENV GOPATH=/go
 ENV PATH=/go/bin:$PATH
 
-# Get Go libraries.
-RUN go get -u github.com/alecthomas/gometalinter
-RUN go get -u github.com/ethereum/go-ethereum
-
 # Install Go linting tools.
+RUN go get -u github.com/alecthomas/gometalinter
 RUN gometalinter --install
+
+# Install Go-ethereum.
+RUN go get -u github.com/ethereum/go-ethereum
 
 # Set working directory.
 WORKDIR /go/src
