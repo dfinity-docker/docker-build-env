@@ -23,13 +23,13 @@ RUN git clone git://github.com/herumi/cybozulib.git
 RUN git clone git://github.com/herumi/mcl.git
 RUN git clone git://github.com/herumi/xbyak.git
 WORKDIR /tmp/bls
-RUN git checkout b68b35d9cb4c307e2ee85651fef59397c7369b70
+RUN git checkout release20170402
 WORKDIR /tmp/cybozulib
-RUN git checkout d8ad6d345c6aac010f9df08f72af5c9e74e27bb6
+RUN git checkout release20170401
 WORKDIR /tmp/mcl
-RUN git checkout 5315d82b431945b563a24d8e22ed6e18a8a3a544
+RUN git checkout release20170402
 WORKDIR /tmp/xbyak
-RUN git checkout a8d4c1fff30542cb45afc03e85cd1f2d451c527e
+RUN git checkout release20170401
 
 # Install C/C++ libraries.
 WORKDIR /tmp/bls
